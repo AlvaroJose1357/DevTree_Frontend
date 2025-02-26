@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Error from "../components/Error";
 import type { RegisterForm } from "../types";
+import axios, { isAxiosError } from "axios";
 
 export default function Register() {
   const INITIAL_VALUES = {
@@ -20,8 +21,18 @@ export default function Register() {
 
   const watchPassword = watch("password");
 
-  const handleRegister = (formData: RegisterForm) => {
-    console.log(formData);
+  const handleRegister = async (formData: RegisterForm) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData
+      );
+      console.log(data);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response?.data.error);
+      }
+    }
   };
 
   return (

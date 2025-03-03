@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import Error from "../components/Error";
 import type { RegisterForm } from "../types";
 import axios, { isAxiosError } from "axios";
+import { toast } from "sonner";
 
 export default function Register() {
   const INITIAL_VALUES = {
@@ -15,6 +16,7 @@ export default function Register() {
   const {
     register,
     watch,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterForm>({ defaultValues: INITIAL_VALUES });
@@ -26,10 +28,11 @@ export default function Register() {
         `${import.meta.env.VITE_REACT_APP_API_URL}/auth/register`,
         formData
       );
-      console.log(data);
+      toast.success(data);
+      reset();
     } catch (error) {
       if (isAxiosError(error)) {
-        console.log(error.response?.data.error);
+        toast.error(error.response?.data.error);
       }
     }
   };

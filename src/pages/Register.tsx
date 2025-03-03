@@ -20,11 +20,10 @@ export default function Register() {
   } = useForm<RegisterForm>({ defaultValues: INITIAL_VALUES });
 
   const watchPassword = watch("password");
-
   const handleRegister = async (formData: RegisterForm) => {
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
+        `${import.meta.env.VITE_REACT_APP_API_URL}/auth/register`,
         formData
       );
       console.log(data);

@@ -25,8 +25,7 @@ export default function Login() {
     try {
       console.log("Form data", formData);
       const { data } = await api.post("/auth/login", formData);
-      console.log("Data", data);
-      toast.success(data);
+      localStorage.setItem("AUTH_TOKEN", data);
       reset();
     } catch (error) {
       console.log("Error en login", error);

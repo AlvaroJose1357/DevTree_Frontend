@@ -1,0 +1,14 @@
+import { isAxiosError } from "axios";
+import api from "../config/axios";
+
+export async function getUser() {
+  try {
+    const { data } = await api("/user");
+    console.log(data);
+  } catch (error) {
+    // console.log("", error);
+    if (isAxiosError(error)) {
+      throw new Error(error.response?.data.error);
+    }
+  }
+}

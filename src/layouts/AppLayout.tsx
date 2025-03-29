@@ -1,8 +1,26 @@
 import { Link, Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import NavigationTabs from "../components/NavigationTabs";
+import { getUser } from "../api/DevTreeAPI";
 
 export default function AppLayout() {
+  const { data, isLoading, error, isError } = useQuery({
+    // funcion que va a hacer la peticion a la api
+    queryFn: getUser,
+    // nombre en el que la query se va a guardar
+    queryKey: ["user"],
+    // las veces que va a intentar la peticion a la api
+    retry: 1,
+    // si el usuario cambia de pagina y la query ya se hizo, no vuelve a hacer la peticion a la api,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log("User data", data);
+  console.log("User loading", isLoading);
+  console.log("User isError", isError);
+  console.log("User error", error);
+  console.log("User error message", error?.message);
   return (
     <>
       <header className="bg-slate-800 py-5">

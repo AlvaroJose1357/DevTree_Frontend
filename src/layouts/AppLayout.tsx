@@ -1,11 +1,16 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import NavigationTabs from "../components/NavigationTabs";
 import { getUser } from "../api/DevTreeAPI";
 
 export default function AppLayout() {
-  const { data, isLoading, error, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    // error,
+    isError,
+  } = useQuery({
     // funcion que va a hacer la peticion a la api
     queryFn: getUser,
     // nombre en el que la query se va a guardar
@@ -15,12 +20,23 @@ export default function AppLayout() {
     // si el usuario cambia de pagina y la query ya se hizo, no vuelve a hacer la peticion a la api,
     refetchOnWindowFocus: false,
   });
+  // console.log("User data", data);
+  // console.log("User loading", isLoading);
+  // console.log("User isError", isError);
+  // console.log("User error", error);
+  // console.log("User error message", error?.message);
 
-  console.log("User data", data);
-  console.log("User loading", isLoading);
-  console.log("User isError", isError);
-  console.log("User error", error);
-  console.log("User error message", error?.message);
+  if (isLoading) {
+    return "Cargando...";
+    // return (
+    //   <div className="flex h-screen items-center justify-center">
+    //     <img src="/loader.svg" alt="loader" className="w-20 animate-spin" />
+    //   </div>
+    // );
+  }
+
+  if (isError) return <Navigate to={"/auth/login"} />;
+
   return (
     <>
       <header className="bg-slate-800 py-5">

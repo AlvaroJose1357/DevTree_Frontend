@@ -26,7 +26,8 @@ export default function Profile() {
     mutationFn: updateProfileUser,
     onSuccess: (data) => {
       toast.success(data);
-      // queryClient.setQueryData(["user"], data);
+      // lo que hace es invalidar la query, es decir, vuelve a hacer la peticion a la api y actualiza los datos en cache
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (error) => {
       toast.error(error.message);

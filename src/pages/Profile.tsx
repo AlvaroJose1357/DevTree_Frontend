@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import Error from "../components/Error";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { User, UserProfile } from "../types";
-import { updateProfileUser } from "../api/DevTreeAPI";
+import { updateProfileUser, uploadImage } from "../api/DevTreeAPI";
 import { toast } from "sonner";
 
 export default function Profile() {
@@ -22,7 +22,8 @@ export default function Profile() {
     formState: { errors },
   } = useForm<UserProfile>({ defaultValues: INITIAL_VALUES });
 
-  const updateProfile = useMutation({
+  // mutacion para nuestra propia API
+  const updateProfileMutation = useMutation({
     mutationFn: updateProfileUser,
     onSuccess: (data) => {
       toast.success(data);
@@ -35,8 +36,25 @@ export default function Profile() {
   });
 
   const handleProfile = (formData: UserProfile) => {
-    console.log("Form data", formData);
-    updateProfile.mutate(formData);
+    // console.log("Form data", formData);
+    updateProfileMutation.mutate(formData);
+  };
+
+  // mutacion para subir la imagen
+  const uploadImageMutation = useMutation({
+    mutationFn: uploadImage,
+    onSuccess: (data) => {
+      console.log("success", data);
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      uploadImageMutation.mutate(event.target.files[0]);
+    }
   };
   return (
     <form
@@ -79,7 +97,7 @@ export default function Profile() {
           name="handle"
           className="rounded-lg border-none bg-slate-100 p-2"
           accept="image/*" // Solo acepta archivos de imagen
-          onChange={() => {}}
+          onChange={handleImageChange}
         />
       </div>
 

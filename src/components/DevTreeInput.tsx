@@ -4,9 +4,14 @@ import { classNames } from "../utils";
 
 type DevTreeInputProps = {
   item: DevTreeLink;
+  // handleURLChange: VoidFunction; // esto es igual a () => void
+  handleURLChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function DevTreeInput({ item }: DevTreeInputProps) {
+export default function DevTreeInput({
+  item,
+  handleURLChange,
+}: DevTreeInputProps) {
   return (
     <div className="flex items-center gap-5 rounded-xl bg-white p-5 shadow-lg">
       <div
@@ -14,7 +19,14 @@ export default function DevTreeInput({ item }: DevTreeInputProps) {
         style={{ backgroundImage: `url(/social/icon_${item.name}.svg)` }}
       ></div>
 
-      <input type="text" className="flex-1 rounded-xl border border-gray-200" />
+      <input
+        type="text"
+        className="flex-1 rounded-xl border border-gray-200"
+        value={item.url}
+        onChange={handleURLChange}
+        placeholder={`https://www.${item.name}.com/`}
+        name={item.name}
+      />
       <Switch
         checked={item.enabled}
         onChange={() => {}}

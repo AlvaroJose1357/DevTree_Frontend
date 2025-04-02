@@ -31,9 +31,11 @@ export async function uploadImage(file: File) {
   const formData = new FormData();
   formData.append("file", file);
   try {
-    const { data } = await api.post<string>("/user/image", formData);
-    return data;
-    console.log("subiendo imagen");
+    // lo que se hace es desestructurar el data de la respuesta, y dentro de ese data, se desestructura el image, que es lo que nos interesa, ya que es la url de la imagen que se subio, para asi despues darle el type de la imagen por medio de otro destructuring const { data: { image }}: { data: { image: string } }, ya como obtenemos la imagen en la variable image la retornamos
+    const {
+      data: { image },
+    }: { data: { image: string } } = await api.post("/user/image", formData);
+    return image;
   } catch (error) {
     if (isAxiosError(error)) {
       throw new Error(error.response?.data.error);

@@ -41,7 +41,17 @@ export default function DevTree({ data }: DevTreeProps) {
               <Outlet />
             </div>
             <div className="w-full space-y-6 bg-slate-800 px-5 py-10 md:w-96">
-              {/* aqui va el drag and drop */}
+              <p className="text-center text-4xl text-white">{data.handle}</p>
+              {data.image && (
+                <img
+                  src={data.image}
+                  alt="Imagen Perfil"
+                  className="mx-auto max-w-[250px]"
+                />
+              )}
+              <p className="text-center text-lg font-black text-white">
+                {data.description}
+              </p>
             </div>
           </div>
         </main>

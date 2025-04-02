@@ -45,9 +45,17 @@ export default function Profile() {
     mutationFn: uploadImage,
     onSuccess: (data) => {
       console.log("success", data);
+      // esto se le conoce como optimistic update, es decir, que antes de que la mutacion se complete, se actualizan los datos en cache, para que el usuario vea los cambios inmediatamente, y luego se hace la peticion a la api para actualizar los datos en cache
+      queryClient.setQueryData(["user"], (oldData: User) => {
+        // console.log("oldData", oldData);
+        return {
+          ...oldData,
+          image: data,
+        };
+      });
     },
     onError: (error) => {
-      console.log("error", error);
+      toast.error(error.message);
     },
   });
 

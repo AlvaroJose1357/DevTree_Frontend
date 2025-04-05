@@ -1,26 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { social } from "../data/social";
 import DevTreeInput from "../components/DevTreeInput";
 import { isValidURL } from "../utils";
 import { updateProfileUser } from "../api/DevTreeAPI";
-import { User } from "../types";
+import { SocialNetwork, User } from "../types";
 export default function LinkTree() {
   const [devTreeLinks, setDevTreeLinks] = useState(social);
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData(["user"])!;
 
   const { mutate } = useMutation({
     mutationFn: updateProfileUser,
-    onSuccess: (data) => {
-      toast.success(data);
+    onSuccess: () => {
+      toast.success("Actualizado correctamente");
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
+
+  useEffect(() => {
+    const userLinks = JSON.parse(user.links);
+    const updatedData = devTreeLinks.map((item) => {
+      const userLink = userLinks.find(
+        (link: SocialNetwork) => link.name === item.name
+      );
+      if (userLink) {
+        return {
+          ...item,
+          url: userLink.url,
+          enabled: userLink.enabled,
+        };
+      }
+
+      return item;
+    });
+    setDevTreeLinks(updatedData);
+  }, []);
 
   const handleURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // console.log("que se esta copiando", event.target.value);
@@ -36,6 +55,13 @@ export default function LinkTree() {
     // return item;
     // });
     setDevTreeLinks(updateLinks);
+    // esto es para que se cache
+    queryClient.setQueryData(["user"], (oldData: User) => {
+      return {
+        ...oldData,
+        links: JSON.stringify(updateLinks),
+      };
+    });
   };
 
   const handleEnableLink = (socialNetwork: string) => {
@@ -54,6 +80,7 @@ export default function LinkTree() {
     });
     // console.log(updateLinks);
     setDevTreeLinks(updateLinks);
+
     queryClient.setQueryData(["user"], (oldData: User) => {
       return {
         ...oldData,
@@ -74,9 +101,7 @@ export default function LinkTree() {
         ))}
         <button
           className="w-full rounded-lg bg-cyan-400 p-2 text-lg font-bold uppercase text-slate-600"
-          onClick={() => {
-            mutate(user);
-          }}
+          onClick={() => mutate(user)}
         >
           Guardar Cambios
         </button>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { social } from "../data/social";
 import DevTreeInput from "../components/DevTreeInput";
+import { isValidURL } from "../utils";
+import { toast } from "sonner";
 export default function LinkTree() {
   const [devTreeLinks, setDevTreeLinks] = useState(social);
 
@@ -22,9 +24,18 @@ export default function LinkTree() {
 
   const handleEnableLink = (socialNetwork: string) => {
     // console.log(socialNetwork);
-    const updateLinks = devTreeLinks.map((link) =>
-      link.name === socialNetwork ? { ...link, enabled: !link.enabled } : link
-    );
+    const updateLinks = devTreeLinks.map((link) => {
+      if (link.name === socialNetwork) {
+        if (isValidURL(link.url)) {
+          return { ...link, enabled: !link.enabled };
+        } else {
+          toast.error("Please enter a valid URL", {
+            description: "The URL you entered is not valid",
+          });
+        }
+      }
+      return link;
+    });
     // console.log(updateLinks);
     setDevTreeLinks(updateLinks);
   };

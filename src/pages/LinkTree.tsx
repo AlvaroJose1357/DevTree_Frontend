@@ -56,12 +56,6 @@ export default function LinkTree() {
     // });
     setDevTreeLinks(updateLinks);
     // esto es para que se cache
-    queryClient.setQueryData(["user"], (oldData: User) => {
-      return {
-        ...oldData,
-        links: JSON.stringify(updateLinks),
-      };
-    });
   };
 
   const handleEnableLink = (socialNetwork: string) => {
@@ -81,6 +75,16 @@ export default function LinkTree() {
     // console.log(updateLinks);
     setDevTreeLinks(updateLinks);
 
+    const selectedSocialNetwork = updateLinks.find(
+      (link) => link.name === socialNetwork
+    );
+    if (selectedSocialNetwork?.enabled) {
+      console.log("Link habilitado:", selectedSocialNetwork);
+    } else {
+      console.log("Link deshabilitado:", selectedSocialNetwork);
+    }
+
+    // codigo que almacena en la DB
     queryClient.setQueryData(["user"], (oldData: User) => {
       return {
         ...oldData,

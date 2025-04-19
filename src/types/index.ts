@@ -23,7 +23,7 @@ export type UserProfile = Pick<User, "handle" | "description">;
 // types para los links
 export type SocialNetwork = {
   // esta es la que se va a guardar en la BD
-  id: number;
+  id: string;
   name: string;
   url: string;
   enabled: boolean;

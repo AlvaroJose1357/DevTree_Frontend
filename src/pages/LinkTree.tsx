@@ -58,6 +58,9 @@ export default function LinkTree() {
     // esto es para que se cache
   };
 
+  // este es el que viene de la BD
+  const links: SocialNetwork[] = JSON.parse(user.links);
+
   const handleEnableLink = (socialNetwork: string) => {
     // console.log(socialNetwork);
     const updateLinks = devTreeLinks.map((link) => {
@@ -75,20 +78,52 @@ export default function LinkTree() {
     // console.log(updateLinks);
     setDevTreeLinks(updateLinks);
 
+    // este es el que va a ir almacenando dependiendo de lo que el usuario valla habilitando o deshabilitando en la pagina
+    let updateItems: SocialNetwork[] = [];
     const selectedSocialNetwork = updateLinks.find(
       (link) => link.name === socialNetwork
     );
     if (selectedSocialNetwork?.enabled) {
-      console.log("Link habilitado:", selectedSocialNetwork);
+      const id = links.filter((link) => link.id).length + 1;
+      if (links.some((link) => link.name === socialNetwork)) {
+        updateItems = links.map((link) => {
+          if (link.name === socialNetwork) {
+            return { ...link, enabled: true, id };
+          }
+          return link;
+        });
+      } else {
+        const newItem = {
+          ...selectedSocialNetwork,
+          id,
+        };
+        updateItems = [...links, newItem];
+      }
     } else {
-      console.log("Link deshabilitado:", selectedSocialNetwork);
+      const updateToIndex = links.findIndex(
+        (link) => link.name === socialNetwork
+      );
+      updateItems = links.map((link) => {
+        if (link.name === socialNetwork) {
+          return { ...link, enabled: false };
+        } else if (link.id > updateToIndex) {
+          return {
+            ...link,
+            id: link.id - 1,
+          };
+        } else {
+          return link;
+        }
+      });
     }
+
+    // console.log("updateItems", updateItems);
 
     // codigo que almacena en la DB
     queryClient.setQueryData(["user"], (oldData: User) => {
       return {
         ...oldData,
-        links: JSON.stringify(updateLinks),
+        links: JSON.stringify(updateItems),
       };
     });
   };

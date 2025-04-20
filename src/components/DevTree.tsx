@@ -70,7 +70,7 @@ export default function DevTree({ data }: DevTreeProps) {
           <div className="flex justify-end">
             <Link
               className="text-right text-2xl font-bold text-slate-800"
-              to={""}
+              to={`/${data.handle}`}
               target="_blank"
               rel="noreferrer noopener"
             >

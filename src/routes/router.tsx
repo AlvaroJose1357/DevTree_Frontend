@@ -5,6 +5,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import AppLayout from "../layouts/AppLayout";
 import LinkTree from "../pages/LinkTree";
 import Profile from "../pages/Profile";
+import Handle from "../pages/Handle";
+import NotFoundUser from "../pages/NotFoundUser";
 
 export default function Router() {
   return (
@@ -17,6 +19,12 @@ export default function Router() {
         <Route path="/admin" element={<AppLayout />}>
           <Route index={true} element={<LinkTree />} />
           <Route path="profile" element={<Profile />} />
+        </Route>
+        <Route path="/:handle" element={<AuthLayout />}>
+          <Route index={true} element={<Handle />} />
+        </Route>
+        <Route path="/404" element={<AuthLayout />}>
+          <Route index={true} element={<NotFoundUser />} />
         </Route>
       </Routes>
     </BrowserRouter>

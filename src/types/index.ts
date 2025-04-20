@@ -9,6 +9,12 @@ export type User = {
   links: string;
 };
 
+// export type UserHandle = Omit<User, "_id | email" >;
+export type UserHandle = Pick<
+  User,
+  "description" | "handle" | "image" | "name" | "links"
+>;
+
 export type RegisterForm = Pick<User, "name" | "email" | "handle"> & {
   password: string;
   password_confirmation: string;

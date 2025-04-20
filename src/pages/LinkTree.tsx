@@ -106,7 +106,11 @@ export default function LinkTree() {
       updateItems = links.map((link) => {
         if (link.name === socialNetwork) {
           return { ...link, enabled: false };
-        } else if (link.id > updateToIndex) {
+        } else if (
+          link.id > updateToIndex &&
+          updateToIndex !== 0 &&
+          link.id === 1
+        ) {
           return {
             ...link,
             id: link.id - 1,
@@ -140,7 +144,7 @@ export default function LinkTree() {
         ))}
         <button
           className="w-full rounded-lg bg-cyan-400 p-2 text-lg font-bold uppercase text-slate-600"
-          onClick={() => mutate(user)}
+          onClick={() => mutate(queryClient.getQueryData(["user"])!)}
         >
           Guardar Cambios
         </button>

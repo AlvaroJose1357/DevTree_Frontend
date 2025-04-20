@@ -4,6 +4,13 @@ import NavigationTabs from "./NavigationTabs";
 import { SocialNetwork, User } from "../types";
 import { useEffect, useState } from "react";
 import DevTreeLinks from "./DevTreeLinks";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { useQueryClient } from "@tanstack/react-query";
 
 type DevTreeProps = { data: User };
 export default function DevTree({ data }: DevTreeProps) {
@@ -16,6 +23,30 @@ export default function DevTree({ data }: DevTreeProps) {
       JSON.parse(data.links).filter((item: SocialNetwork) => item.enabled)
     );
   }, [data]);
+
+  const queryClient = useQueryClient();
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && over.id) {
+      const prevIndex = enableLinks.findIndex((link) => link.id === active.id);
+      const newIndex = enableLinks.findIndex((link) => link.id === over.id);
+      const order = arrayMove(enableLinks, prevIndex, newIndex);
+      setEnableLinks(order);
+
+      const disabledLinks: SocialNetwork[] = JSON.parse(data.links).filter(
+        (item: SocialNetwork) => !item.enabled
+      );
+
+      const links = [...order, ...disabledLinks];
+
+      queryClient.setQueryData(["user"], (oldData: User) => {
+        return {
+          ...oldData,
+          links: JSON.stringify(links),
+        };
+      });
+    }
+  };
   return (
     <>
       <header className="bg-slate-800 py-5">
@@ -63,17 +94,27 @@ export default function DevTree({ data }: DevTreeProps) {
               <p className="text-center text-lg font-black text-white">
                 {data.description}
               </p>
-              <div className="mt-20 flex flex-col gap-5">
-                {enableLinks.length > 0 ? (
-                  enableLinks.map((link) => (
-                    <DevTreeLinks key={link.name} link={link} />
-                  ))
-                ) : (
-                  <p className="text-center text-lg font-black text-white">
-                    No hay links habilitados
-                  </p>
-                )}
-              </div>
+              <DndContext
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <div className="mt-20 flex flex-col gap-5">
+                  <SortableContext
+                    items={enableLinks}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {enableLinks.length > 0 ? (
+                      enableLinks.map((link) => (
+                        <DevTreeLinks key={link.name} link={link} />
+                      ))
+                    ) : (
+                      <p className="text-center text-lg font-black text-white">
+                        No hay links habilitados
+                      </p>
+                    )}
+                  </SortableContext>
+                </div>
+              </DndContext>
             </div>
           </div>
         </main>

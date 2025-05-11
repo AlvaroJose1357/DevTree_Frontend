@@ -11,6 +11,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { useQueryClient } from "@tanstack/react-query";
+import Header from "./Header";
 
 type DevTreeProps = { data: User };
 export default function DevTree({ data }: DevTreeProps) {
@@ -49,21 +50,7 @@ export default function DevTree({ data }: DevTreeProps) {
   };
   return (
     <>
-      <header className="bg-slate-800 py-5">
-        <div className="mx-auto flex max-w-5xl flex-col items-center md:flex-row md:justify-between">
-          <div className="w-full p-5 md:w-1/3 lg:p-0">
-            <img src="/logo.svg" className="block w-full" />
-          </div>
-          <div className="md:flex md:w-1/3 md:justify-end">
-            <button
-              className="cursor-pointer rounded-lg bg-lime-500 p-2 text-xs font-black uppercase text-slate-800"
-              onClick={() => {}}
-            >
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header />
       <div className="min-h-screen bg-gray-100 py-10">
         <main className="mx-auto max-w-5xl p-10 md:p-0">
           <NavigationTabs />

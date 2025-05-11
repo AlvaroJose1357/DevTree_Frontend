@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Error from "../components/Error";
 import { isAxiosError } from "axios";
@@ -14,6 +14,7 @@ export default function Login() {
     email: "",
     password: "",
   };
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -26,6 +27,7 @@ export default function Login() {
       console.log("Form data", formData);
       const { data } = await api.post("/auth/login", formData);
       localStorage.setItem("AUTH_TOKEN", data);
+      navigate("/admin");
       reset();
     } catch (error) {
       console.log("Error en login", error);

@@ -15,7 +15,7 @@ export default function AppLayout() {
     // nombre en el que la query se va a guardar
     queryKey: ["user"],
     // las veces que va a intentar la peticion a la api
-    retry: 1,
+    retry: 2,
     // si el usuario cambia de pagina y la query ya se hizo, no vuelve a hacer la peticion a la api,
     refetchOnWindowFocus: false,
   });

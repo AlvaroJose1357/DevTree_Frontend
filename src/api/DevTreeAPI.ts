@@ -55,3 +55,15 @@ export async function getUserByHandle(handle: string) {
     }
   }
 }
+export async function searchByHandle(handle: string) {
+  try {
+    const { data } = await api.post<string>("/search", { handle });
+    // console.log(data);
+    return data;
+  } catch (error) {
+    // console.log("", error);
+    if (isAxiosError(error)) {
+      throw new Error(error.response?.data.error);
+    }
+  }
+}

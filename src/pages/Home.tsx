@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import SearchForm from "../components/SearchForm";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
               Comparte tu contenido en un solo enlace y haz crecer tu audiencia
               de forma sencilla.
             </p>
+            <SearchForm />
           </div>
         </div>
       </main>

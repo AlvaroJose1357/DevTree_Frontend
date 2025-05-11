@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        home: "url('bg.svg')",
+        home: "url('/bg.svg')",
       },
       backgroundSize: {
         "home-xl": "50%",
